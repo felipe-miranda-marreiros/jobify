@@ -77,8 +77,8 @@ export const AddJob = () => {
           />
           {/* job status */}
           <FormRowSelect
-            name="status"
-            labelText="job type"
+            labelText="type"
+            name="jobType"
             value={jobType}
             handleChange={handleJobInput}
             list={jobTypeOptions}

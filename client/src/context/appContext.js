@@ -42,7 +42,7 @@ const initialState = {
   jobLocation: userLocation || '',
   jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
   jobType: 'full-time',
-  statusOptions: ['interview', 'declined', 'pending'],
+  statusOptions: ['pending', 'interview', 'declined'],
   status: 'pending',
   jobs: [],
   totalJobs: 0,
@@ -105,6 +105,7 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('location');
   };
+
   const setupUser = async ({ currentUser, endPoint, alertText }) => {
     dispatch({ type: SETUP_USER_BEGIN });
 
@@ -189,6 +190,7 @@ const AppProvider = ({ children }) => {
       });
     } catch (error) {
       console.log(error.response);
+      // logoutUser()
     }
     clearAlert();
   };
@@ -215,6 +217,14 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
+
+  const setEditJob = (id) => {
+    console.log(`set edit job: ${id}`);
+  };
+
+  const setDeleteJob = (id) => {
+    console.log(`set delete job: ${id}`);
+  };
   return (
     <AppContext.Provider
       value={{
@@ -226,7 +236,10 @@ const AppProvider = ({ children }) => {
         updateUser,
         handleChange,
         clearValues,
-        createJob
+        createJob,
+        getJobs,
+        setEditJob,
+        setDeleteJob
       }}
     >
       {children}
