@@ -24,7 +24,9 @@ import {
   DELETE_JOB_BEGIN,
   EDIT_JOB_BEGIN,
   EDIT_JOB_SUCCESS,
-  EDIT_JOB_ERROR
+  EDIT_JOB_ERROR,
+  SHOW_STATS_BEGIN,
+  SHOW_STATS_SUCCESS
 } from './actions';
 
 const token = localStorage.getItem('token');
@@ -52,7 +54,9 @@ const initialState = {
   jobs: [],
   totalJobs: 0,
   numOfPages: 1,
-  page: 1
+  page: 1,
+  stats: {},
+  monthlyApplications: []
 };
 
 const AppContext = React.createContext();
@@ -265,9 +269,23 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const setDeleteJob = (id) => {
-    console.log(`set delete job: ${id}`);
+  const showStats = async () => {
+    dispatch({ type: SHOW_STATS_BEGIN });
+    try {
+      const { data } = await authFetch.get('/jobs/stats');
+      dispatch({
+        type: SHOW_STATS_SUCCESS,
+        payload: {
+          stats: data.defaultStats,
+          monthlyApplications: data.monthlyApplications
+        }
+      });
+    } catch (error) {
+      console.log(error.response);
+      // logoutUser()
+    }
   };
+
   return (
     <AppContext.Provider
       value={{
@@ -282,9 +300,9 @@ const AppProvider = ({ children }) => {
         createJob,
         getJobs,
         setEditJob,
-        setDeleteJob,
         editJob,
-        deleteJob
+        deleteJob,
+        showStats
       }}
     >
       {children}
